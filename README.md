@@ -3,4 +3,4 @@
 Group:
 1.    Martin Carranza
 2.    Nicholas Thomas
-3.    Isaac Tucker
+3.    Brian Cantrell
