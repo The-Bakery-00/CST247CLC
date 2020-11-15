@@ -1,0 +1,18 @@
+﻿
+@{
+    ViewBag.Title = "RegistrationFailure";
+}
+
+<h2>RegistrationFailure! The username or email you selected is already in use!</h2>
+<h2>Please try logging in or choose a different email or username!</h2>
+
+<p>
+    <div>
+        @Html.ActionLink("Try Again?", "Index")
+    </div>
+    <div>
+        @Html.ActionLink("Already Have an Account? Click Here!", "Login", "Login", "Login", "Login")
+    </div>
+
+</p>
+
