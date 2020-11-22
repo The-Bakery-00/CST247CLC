@@ -10,27 +10,49 @@ namespace MilestoneCST247.Controllers
 {
     public class LoginController : Controller
     {
-        // GET: Login
+        [HttpGet]
         public ActionResult Index()
         {
             return View("Login");
         }
 
-        public ActionResult Login(UserModel userModel)
+
+        [HttpPost]
+        public ActionResult doLogin(LoginRequest loginRequest)
         {
-            //return "Result: Username = " + userModel.UserName + " PW = " + userModel.Password;
 
-            SecurityService securityService = new SecurityService();
-            Boolean success = securityService.Authenticate(userModel);
+            LoginResponse response;
 
-            if (success)
+            if (ModelState.IsValid)
             {
-                return View("LoginSuccess", userModel);
+
+                SecurityService ss = new SecurityService();
+                response = ss.Authenticate(loginRequest);
+
+                if (response.Success)
+                {
+
+                    //load user model and throw in session var
+                    UserService userService = new UserService();
+                    var user = userService.loadUser(loginRequest);
+                    this.Session["user"] = user;
+                    
+
+
+                    return View("LoginSuccess", loginRequest);
+
+                }
             }
             else
             {
-                return View("LoginFailure");
+                string errors = string.Join("<br/> ", ModelState.Values
+                                        .SelectMany(x => x.Errors)
+                                        .Select(x => x.ErrorMessage));
+                response = new LoginResponse(false, errors);
             }
+            return View("LoginFailure", response);
+
+
         }
 
     }

@@ -10,26 +10,32 @@ namespace MilestoneCST247.Services.Business
     public class RegSecurityService
     {
 
-        RegSecurityDAO daoService = new RegSecurityDAO();
-
-        public bool Validate(UserModel user)
+        public RegisterResponse Authenticate(RegisterRequest registerRequest)
         {
-            if(daoService.userExists(user))
+
+            RegisterResponse response = new RegisterResponse();
+            response.Success = false;
+
+            RegSecurityDAO dataService = new RegSecurityDAO();
+
+
+
+            if (dataService.userExists(registerRequest))
             {
-                return false;
+                response.Message = "Username already exists.";
             }
-            else if(daoService.emailExists(user))
+            else if (dataService.emailExists(registerRequest))
             {
-                return false;
+                response.Message = "Email already in use.";
             }
-            else if (daoService.createUser(user))
+            else if (dataService.createUser(registerRequest))
             {
-                return true;
+                response.Success = true;
             }
-            else
-            {
-                return false;
-            }
+
+
+            return response;
+
         }
 
     }

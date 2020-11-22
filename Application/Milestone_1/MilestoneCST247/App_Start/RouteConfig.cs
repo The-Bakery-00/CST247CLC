@@ -31,9 +31,15 @@ namespace MilestoneCST247
                 defaults: new { controller = "Register", action = "Index", id = UrlParameter.Optional }
             );
 
+            routes.MapRoute(
+              name: "Game",
+              url: "{Game}",
+              defaults: new { controller = "Game", action = "Index", id = UrlParameter.Optional }
+          );
 
 
-            
+
+
         }
     }
 }

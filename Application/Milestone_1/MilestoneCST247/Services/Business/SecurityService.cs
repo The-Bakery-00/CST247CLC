@@ -9,11 +9,25 @@ namespace MilestoneCST247.Services.Business
 {
     public class SecurityService
     {
-        SecurityDAO daoService = new SecurityDAO();
+        //SecurityDAO daoService = new SecurityDAO();
 
-        public bool Authenticate(UserModel user)
+        public LoginResponse Authenticate(LoginRequest loginRequest)
         {
-            return daoService.FindByUser(user);
+            LoginResponse response = new LoginResponse();
+            response.Success = false;
+
+            SecurityDAO dataService = new SecurityDAO();
+
+            if (dataService.validUser(loginRequest))
+            {
+                response.Success = true;
+            }
+            else
+            {
+                response.Message = "Invalid username or password.";
+            }
+
+            return response;
         }
     }
 }

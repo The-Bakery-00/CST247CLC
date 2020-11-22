@@ -10,25 +10,47 @@ namespace MilestoneCST247.Controllers
 {
     public class RegisterController : Controller
     {
-        // GET: Register
+        [HttpGet]
         public ActionResult Index()
         {
+
             return View("Register");
         }
 
-        public ActionResult Register(UserModel userModel)
+        [HttpGet]
+        public ActionResult Login()
         {
-            RegSecurityService securityService = new RegSecurityService();
-            Boolean success = securityService.Validate(userModel);
+            return View("Login");
+        }
 
-            if (success)
+
+
+        [HttpPost]
+        public ActionResult Register(RegisterRequest registerRequest)
+        {
+            RegSecurityService ss = new RegSecurityService();
+            RegisterResponse response;
+
+            if (ModelState.IsValid)
             {
-                return View("RegistrationSuccess", userModel);
+                response = ss.Authenticate(registerRequest);
+
+                if (response.Success)
+                {
+                    return View("RegistrationSuccess", registerRequest);
+
+                }
             }
             else
             {
-                return View("RegistrationFailure");
+                string errors = string.Join("<br/> ", ModelState.Values
+                        .SelectMany(x => x.Errors)
+                        .Select(x => x.ErrorMessage));
+                response = new RegisterResponse(false, errors);
             }
+
+            return View("RegistrationFailure", response);
+
         }
 
     }

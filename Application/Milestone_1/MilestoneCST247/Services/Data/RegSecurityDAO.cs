@@ -12,7 +12,7 @@ namespace MilestoneCST247.Services.Data
         // way to connect to the DB
         string connectionString = @"Data Source=(localdb)\ProjectsV13;Initial Catalog=Users;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
 
-        public bool userExists(UserModel user)
+        public bool userExists(RegisterRequest registerRequest)
         {
             bool success = false;
 
@@ -27,7 +27,7 @@ namespace MilestoneCST247.Services.Data
                 SqlCommand command = new SqlCommand(queryString, connection);
 
                 // assosiates @UserName and @Password with user.UserNmae and User.Passwords
-                command.Parameters.Add("@UserName", System.Data.SqlDbType.VarChar, 50).Value = user.UserName;
+                command.Parameters.Add("@UserName", System.Data.SqlDbType.VarChar, 50).Value = registerRequest.Username;
 
 
                 // open the database and run the command
@@ -56,7 +56,7 @@ namespace MilestoneCST247.Services.Data
             }
         }
 
-        public bool emailExists(UserModel user)
+        public bool emailExists(RegisterRequest registerRequest)
         {
             bool success = false;
 
@@ -71,7 +71,7 @@ namespace MilestoneCST247.Services.Data
                 SqlCommand command = new SqlCommand(queryString, connection);
 
                 // assosiates @UserName and @Password with user.UserNmae and User.Passwords
-                command.Parameters.Add("@Email", System.Data.SqlDbType.VarChar, 50).Value = user.Email;
+                command.Parameters.Add("@Email", System.Data.SqlDbType.VarChar, 50).Value = registerRequest.Email;
 
 
                 // open the database and run the command
@@ -100,7 +100,7 @@ namespace MilestoneCST247.Services.Data
             }
         }
 
-        public bool createUser(UserModel user)
+        public bool createUser(RegisterRequest registerRequest)
         {
             bool success = false;
 
@@ -115,13 +115,13 @@ namespace MilestoneCST247.Services.Data
                 SqlCommand command = new SqlCommand(queryString, connection);
 
                 // assosiates @UserName and @Password with user.UserNmae and User.Passwords
-                command.Parameters.Add("@UserName", System.Data.SqlDbType.VarChar, 50).Value = user.UserName;
-                command.Parameters.Add("@Password", System.Data.SqlDbType.VarChar, 50).Value = user.Password;
-                command.Parameters.Add("@Email", System.Data.SqlDbType.VarChar, 50).Value = user.Email;
-                command.Parameters.Add("@FirstName", System.Data.SqlDbType.VarChar, 50).Value = user.FistName;
-                command.Parameters.Add("@LastName", System.Data.SqlDbType.VarChar, 50).Value = user.LastName;
-                command.Parameters.Add("@Age", System.Data.SqlDbType.VarChar, 50).Value = user.Age;
-                command.Parameters.Add("@Gender", System.Data.SqlDbType.VarChar, 50).Value = user.Gender;
+                command.Parameters.Add("@UserName", System.Data.SqlDbType.VarChar, 50).Value = registerRequest.Username;
+                command.Parameters.Add("@Password", System.Data.SqlDbType.VarChar, 50).Value = registerRequest.Password;
+                command.Parameters.Add("@Email", System.Data.SqlDbType.VarChar, 50).Value = registerRequest.Email;
+                command.Parameters.Add("@FirstName", System.Data.SqlDbType.VarChar, 50).Value = registerRequest.FirstName;
+                command.Parameters.Add("@LastName", System.Data.SqlDbType.VarChar, 50).Value = registerRequest.LastName;
+                command.Parameters.Add("@Age", System.Data.SqlDbType.Int, 11).Value = registerRequest.Age;
+                command.Parameters.Add("@Gender", System.Data.SqlDbType.VarChar, 50).Value = registerRequest.Gender;
 
 
                 // open the database and run the command
