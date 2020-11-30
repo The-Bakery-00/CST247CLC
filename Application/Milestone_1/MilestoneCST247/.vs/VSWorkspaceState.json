@@ -1,7 +1,12 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\Services",
+    "\\Services\\Business",
+    "\\Services\\Data",
+    "\\Views",
+    "\\Views\\Home"
   ],
-  "SelectedNode": "\\MilestoneCST247.sln",
+  "SelectedNode": "\\Services\\Data\\UserDAO.cs",
   "PreviewInSolutionExplorer": false
 }

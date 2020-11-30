@@ -11,7 +11,7 @@ namespace MilestoneCST247.Services.Data
     {
 
         // way to connect to the DB
-        string connectionString = @"Data Source=(localdb)\ProjectsV13;Initial Catalog=Users;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+        string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=MineSweepr;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
 
         public Grid findGrid(User user)
         {
@@ -28,7 +28,7 @@ namespace MilestoneCST247.Services.Data
                     SqlCommand command = new SqlCommand(queryString, connection);
 
                     // Set query parameters and their values
-                    command.Parameters.Add("@id", System.Data.SqlDbType.Int, 11).Value = 2; /////// check here
+                    command.Parameters.Add("@id", System.Data.SqlDbType.Int, 11).Value = user.Id; 
 
                     // open the database and run the command
 
@@ -41,8 +41,9 @@ namespace MilestoneCST247.Services.Data
                         int ID = int.Parse(reader["ID"].ToString());
                         int rows = int.Parse(reader["ROWS"].ToString());
                         int cols = int.Parse(reader["COLS"].ToString());
-                        Boolean GAMEOVER = Boolean.Parse(reader["GAMEOVER"].ToString());
                         int USER_ID = int.Parse(reader["USERID"].ToString());
+                        Boolean GAMEOVER = Boolean.Parse(reader["GAMEOVER"].ToString());
+                    
                         g = new Grid(ID, rows, cols, USER_ID, GAMEOVER);
                         g.Cells = new Cell[cols, rows];
                     }
@@ -62,7 +63,6 @@ namespace MilestoneCST247.Services.Data
 
             if (g != null)
             {
-
                 try
                 {
                     using (SqlConnection connection = new SqlConnection(connectionString))
@@ -75,7 +75,8 @@ namespace MilestoneCST247.Services.Data
                         SqlCommand command = new SqlCommand(queryString, connection);
 
                         // Set query parameters and their values
-                        command.Parameters.Add("@id", System.Data.SqlDbType.Int, 11).Value = 2;
+                        command.Parameters.Add("@id", System.Data.SqlDbType.Int, 11).Value = g.Id; /////////////////////////////////////// *******this is a test but this needs to be g.Id*** //////////////////////////////
+
 
                         // open the database and run the command
 
@@ -97,6 +98,7 @@ namespace MilestoneCST247.Services.Data
                             c.Visited = visited;
                             c.LiveNeighbors = live;
                             g.Cells[x, y] = c;
+
                         }
 
                         // Close the connection
@@ -111,6 +113,8 @@ namespace MilestoneCST247.Services.Data
                 }
 
             }
+
+            
             return g;
         }
 
@@ -123,8 +127,8 @@ namespace MilestoneCST247.Services.Data
             try
             {
                 // Setup INSERT query with parameters
-                string queryString = "INSERT INTO dbo.grids (ROWS, COLS, GAMEOVER, USERID) " +
-                    "VALUES (@Rows, @Cols, @GameOver,  @User_ID)";
+                string queryString = "INSERT INTO dbo.grids (ROWS, COLS, USERID, GAMEOVER) " +
+                    "VALUES (@Rows, @Cols, @User_ID, @GameOver) SELECT SCOPE_IDENTITY()";
 
                 // Create connection and command
                 using (SqlConnection connection = new SqlConnection(connectionString))
@@ -137,8 +141,9 @@ namespace MilestoneCST247.Services.Data
                     // Set query parameters and their values
                     command.Parameters.Add("@Rows", System.Data.SqlDbType.Int, 11).Value = grid.Rows;
                     command.Parameters.Add("@Cols", System.Data.SqlDbType.Int, 11).Value = grid.Cols;
-                    command.Parameters.Add("@GameOver", System.Data.SqlDbType.Int, 11).Value = grid.GameOver;
                     command.Parameters.Add("@User_ID", System.Data.SqlDbType.Int, 11).Value = grid.Userid;
+                    command.Parameters.Add("@GameOver", System.Data.SqlDbType.Bit).Value = grid.GameOver;
+                    
                     // open the database and run the command
 
                     connection.Open();
@@ -292,14 +297,14 @@ namespace MilestoneCST247.Services.Data
 
             try
             {
-                string queryString = "DELETE FROM dbo.grids WHERE USERID=@Id ";
+                string queryString = "DELETE FROM dbo.grids WHERE USERID=@Id";
 
 
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     SqlCommand command = new SqlCommand(queryString, connection);
 
-                    command.Parameters.AddWithValue("@Id", 1);
+                    command.Parameters.AddWithValue("@Id", user.Id);
                     connection.Open();
                     command.ExecuteNonQuery();
                     connection.Close();

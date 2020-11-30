@@ -13,12 +13,11 @@ namespace MilestoneCST247.Controllers
         // GET: Game
         public ActionResult Index()
         {
-
             //create user service
             UserService userService = new UserService();
 
             //check if user is logged in
-            if (!userService.loggedIn(this))
+            if (userService.loggedIn(this))
             {
 
                 //create game service object
@@ -42,7 +41,7 @@ namespace MilestoneCST247.Controllers
                 else
                 {
                     //generate a grid for user
-                    g = gameService.createGrid(this, 10, 10);// currently this is set to 10 by default but change as we add more difficulty levels 
+                    g = gameService.createGrid(this, 10, 10);
                 }
 
 
@@ -53,8 +52,6 @@ namespace MilestoneCST247.Controllers
 
             else
             {
-
-
                 //user isn't logged in
                 Error e = new Error("You must be logged in to access this page.");
 

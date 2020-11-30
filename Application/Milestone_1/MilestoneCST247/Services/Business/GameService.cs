@@ -18,8 +18,6 @@ namespace MilestoneCST247.Services.Business
         {
             User user = (User)c.Session["user"];
 
-            //User user = new User(10, "Marty1o", "password", "Martin", "Carranza", "martin.c.842@gmail.com", "Male", 23);
-
             //System.Diagnostics.Debug.WriteLine("Loading grid for: "+user.Email);
 
             GameDAO gameDAO = new GameDAO();
@@ -49,11 +47,11 @@ namespace MilestoneCST247.Services.Business
 
             GameDAO gameDAO = new GameDAO();
 
-            Cell c = g.Cells[X, Y];
+            g.Cells[X, Y].Visited = true;
 
-            c.Visited = true;
+            //c.Visited = true;
 
-            if (c.Bomb)
+            if (g.Cells[X, Y].Bomb)
             {
                 for (int y = 0; y < g.Rows; y++)
                 {
@@ -66,8 +64,8 @@ namespace MilestoneCST247.Services.Business
             }
             else
             {
-                if (c.LiveNeighbors == 0)
-                    revealSurroundingCells(g, c.X, c.Y);
+                if (g.Cells[X, Y].LiveNeighbors == 0)
+                    revealSurroundingCells(g, g.Cells[X, Y].X, g.Cells[X, Y].Y);
 
             }
 
@@ -120,9 +118,7 @@ namespace MilestoneCST247.Services.Business
         {
             User user = (User)c.Session["user"];
 
-            
-
-            Grid grid = new Grid(-1, width, height, 2, false);//////////////////////// this is supposed to be user.id instead of 2
+            Grid grid = new Grid(-1, width, height, user.Id, false);
             Cell[,] cells = new Cell[width, height];
 
             //intitialize cells
@@ -140,7 +136,7 @@ namespace MilestoneCST247.Services.Business
             {
                 for (int x = 0; x < width; x++)
                 {
-                    if (rand.Next(0, 100) <= 10) // this will change as we add more difficulty levels, for now it is set to 10 by default
+                    if (rand.Next(0, 100) <= 10)
                     {
                         cells[x, y].Bomb = true;
                         cells[x, y].LiveNeighbors = 9;
@@ -173,7 +169,7 @@ namespace MilestoneCST247.Services.Business
 
             gameDAO.createGrid(grid);
 
-
+            
             return grid;
         }
 
