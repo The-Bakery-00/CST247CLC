@@ -10,17 +10,11 @@ namespace MilestoneCST247.Services.Business
 {
     public class GameService
     {
-        /** Game Service class **/
 
-
-        //returns grid for userS
+        //returns grid for user
         public Grid findGrid(Controller c)
         {
             User user = (User)c.Session["user"];
-
-            //User user = new User(10, "Marty1o", "password", "Martin", "Carranza", "martin.c.842@gmail.com", "Male", 23);
-
-            //System.Diagnostics.Debug.WriteLine("Loading grid for: "+user.Email);
 
             GameDAO gameDAO = new GameDAO();
 
@@ -43,17 +37,14 @@ namespace MilestoneCST247.Services.Business
         public void activateCell(Grid g, int X, int Y)
         {
 
-            //loop through cells and find what needs to be revealed
-            //reveal these cells on the grid
-            //update grid to db
+            // this will make every cell that has been click on as actice and show its value, will them push updated cells and grid to DB
 
             GameDAO gameDAO = new GameDAO();
 
-            Cell c = g.Cells[X, Y];
+            g.Cells[X, Y].Visited = true;  
 
-            c.Visited = true;
 
-            if (c.Bomb)
+            if (g.Cells[X, Y].Bomb)
             {
                 for (int y = 0; y < g.Rows; y++)
                 {
@@ -66,8 +57,8 @@ namespace MilestoneCST247.Services.Business
             }
             else
             {
-                if (c.LiveNeighbors == 0)
-                    revealSurroundingCells(g, c.X, c.Y);
+                if (g.Cells[X, Y].LiveNeighbors == 0)
+                    revealSurroundingCells(g, g.Cells[X, Y].X, g.Cells[X, Y].Y);
 
             }
 
@@ -78,7 +69,7 @@ namespace MilestoneCST247.Services.Business
 
         private void revealSurroundingCells(Grid g, int x, int y)
         {
-            //calls revealnextCell function on every coordinate surrounding the target cell
+            //will check cells around cell that was clicked and reveal them
             RevealNextCell(g, x - 1, y - 1);
             RevealNextCell(g, x - 1, y);
             RevealNextCell(g, x - 1, y + 1);
@@ -92,24 +83,23 @@ namespace MilestoneCST247.Services.Business
         private void RevealNextCell(Grid g, int x, int y)
         {
 
-            //checks if cell is in bounds
+            //check is cell is out of the limits
             if (!(x >= 0 && x < g.Cols && y >= 0 && y < g.Rows)) return;
 
-            //checks if cell is visited
+            //has the cell been visited already?
             if (g.Cells[x, y].Visited) return;
 
-            //checks if cell has any bombs around it
+            //will check is cell around contains a bomb
             if (g.Cells[x, y].LiveNeighbors == 0)
             {
-                //sets cell to visited and calls recursive function to cycle through its neighbors
+                //cell is marked as visited and recusively calls itself with neighnor cell
                 g.Cells[x, y].Visited = true;
                 revealSurroundingCells(g, x, y);
             }
 
-            //checks if cell isn't a bomb
+            //is cell a bomb?
             else if (!g.Cells[x, y].Bomb)
             {
-                //sets cell to visited
                 g.Cells[x, y].Visited = true;
             }
 
@@ -120,12 +110,10 @@ namespace MilestoneCST247.Services.Business
         {
             User user = (User)c.Session["user"];
 
-            
-
-            Grid grid = new Grid(-1, width, height, 2, false);//////////////////////// this is supposed to be user.id instead of 2
+            Grid grid = new Grid(-1, width, height, user.Id, false);
             Cell[,] cells = new Cell[width, height];
 
-            //intitialize cells
+            //creates cells
             for (int y = 0; y < height; y++)
             {
                 for (int x = 0; x < width; x++)
@@ -134,13 +122,13 @@ namespace MilestoneCST247.Services.Business
                 }
             }
 
-            //activate cells
+            //use rand to see if cell will be bomb or now
             Random rand = new Random();
             for (int y = 0; y < height; y++)
             {
                 for (int x = 0; x < width; x++)
                 {
-                    if (rand.Next(0, 100) <= 10) // this will change as we add more difficulty levels, for now it is set to 10 by default
+                    if (rand.Next(0, 100) <= 10)
                     {
                         cells[x, y].Bomb = true;
                         cells[x, y].LiveNeighbors = 9;
@@ -167,13 +155,13 @@ namespace MilestoneCST247.Services.Business
 
 
 
-            //pass Grid with populated cells to dao query
+            //this will send the new grid and cells to gameDAO
 
             GameDAO gameDAO = new GameDAO();
 
             gameDAO.createGrid(grid);
 
-
+            
             return grid;
         }
 

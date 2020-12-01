@@ -5,13 +5,21 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>LoginSuccess</h2>
+
+<style>
+    div.a {
+        font-size: 150%;
+        color: blue;
+    }
+</style>
+
+<h2>Login Success!</h2>
 
 <div>
-    <div>
-        Sucessfully logged in as @Model.Username @Model.Password
-    </div>
+    <div class="a">Sucessfully logged in as @Model.Username </div>
 
+    <div></div>
+    <div></div>
 
     @Html.ActionLink("Play Game", "Index", "game", new { area = "" }, new { @class = "navbar-brand" })
 

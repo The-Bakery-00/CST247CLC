@@ -7,7 +7,6 @@ namespace MilestoneCST247.Models
 {
     public class Cell
     {
-        /** Cell model class **/
 
         private int id;
         private int x;

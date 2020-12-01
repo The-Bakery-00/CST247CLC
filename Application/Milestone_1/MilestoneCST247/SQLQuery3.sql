@@ -1,0 +1,2 @@
+﻿DELETE FROM dbo.grids WHERE USERID = 1
+DELETE FROM dbo.cells WHERE GRIDID = 1012

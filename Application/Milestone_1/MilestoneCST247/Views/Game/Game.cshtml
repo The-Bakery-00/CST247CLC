@@ -2,9 +2,11 @@
 
 @{
     ViewBag.Title = "Game";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h2>Game</h2>
+
 
 <style>
     .gameBoard table {
@@ -37,63 +39,63 @@
             <tr>
                 @for (var x = 0; x < Model.Cols; x++)
                 {
-                    <td>
+                <td>
 
-                        @if (Model.Cells[x, y].Visited)
+                    @if (Model.Cells[x, y].Visited)
+                    {
+
+                        if (Model.Cells[x, y].Bomb)
+                        {
+                            <input type="image" name="submit" src="~/Images/bomb.jpg" style="width:31px; height:32px; display:block;" border="0" alt="Submit" />
+                        }
+                        else
                         {
 
-                            if (Model.Cells[x, y].Bomb)
+                            if (Model.Cells[x, y].LiveNeighbors > 0)
                             {
-                                <div style="color:black; font-size:20px;">
-                                    *
-                                </div>
-                            }
-                            else
-                            {
-
-                                if (Model.Cells[x, y].LiveNeighbors > 0)
+                                switch (Model.Cells[x, y].LiveNeighbors)
                                 {
-                                    switch (Model.Cells[x, y].LiveNeighbors)
-                                    {
-                                        case 1:
-                                            @:<font color="blue">
+                                    case 1:
+                                        @:<font color="blue">
+                                            break;
+                                        case 2:
+                                            @:<font color="green">
                                                 break;
-                                            case 2:
-                                                @:<font color="green">
+                                            case 3:
+                                                @:<font color="red">
                                                     break;
-                                                case 3:
-                                                    @:<font color="red">
+
+                                                default:
+                                                    @:<font color="purple">
                                                         break;
+                                                }
 
-                                                    default:
-                                                        @:<font color="purple">
-                                                            break;
-                                                    }
-
-                                                    @Model.Cells[x, y].LiveNeighbors
-                                                @:</font>
+                                                @Model.Cells[x, y].LiveNeighbors
+                                            @:</font>
 
 
-                                            }
+
+
                                         }
-
                                     }
-                                    else
+
+                                }
+                                else
+                                {
+                                    using (Html.BeginForm("activateCell", "Game", FormMethod.Post))
                                     {
-                                        using (Html.BeginForm("activateCell", "Game", FormMethod.Post))
-                                        {
-                                            <input type="hidden" name="id" value=@Model.Cells[x, y].Id>
-                                            <input type="hidden" name="x" value=@Model.Cells[x, y].X>
-                                            <input type="hidden" name="y" value=@Model.Cells[x, y].Y>
-                                            <input type="image" name="submit" src="~/Images/b.png" style="width:31px; height:32px; display:block;" border="0" alt="Submit" />
+                                        <input type="hidden" name="id" value=@Model.Cells[x, y].Id>
+                                        <input type="hidden" name="x" value=@Model.Cells[x, y].X>
+                                        <input type="hidden" name="y" value=@Model.Cells[x, y].Y>
+                                        <input type="image" name="submit" src="~/Images/blockGrey.png" style="width:31px; height:32px; display:block;" border="0" alt="Submit" />
 
-                                        }
                                     }
+                                }
 
 
 
 
-        </td>
+                </td>
     }
 
             </tr>
