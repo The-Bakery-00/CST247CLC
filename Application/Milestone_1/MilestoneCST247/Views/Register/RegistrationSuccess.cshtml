@@ -2,11 +2,19 @@
 
 @{
     ViewBag.Title = "RegistrationSuccess";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>RegistrationSuccess</h2>
+<style>
+    div.a {
+        font-size: 150%;
+        color: blue;
+    }
+</style>
 
-<div>
+<h2>Registration Success!</h2>
+
+<div class="a" >
 
     Sucessfully registered in as @Model.Username
 
