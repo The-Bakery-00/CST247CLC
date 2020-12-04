@@ -14,7 +14,6 @@ namespace MilestoneCST247.Models
         private Boolean gameOver;
         private Cell[,] cells;
 
-        /** Grid model class **/
 
         public Grid(int id, int rows, int cols, int userid, bool gameOver)
         {

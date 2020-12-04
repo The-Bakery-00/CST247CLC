@@ -8,7 +8,6 @@ namespace MilestoneCST247.Models
     public class Error
     {
 
-        /** Error model class **/
 
         private string content;
 

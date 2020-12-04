@@ -10,7 +10,7 @@ namespace MilestoneCST247.Services.Data
     public class RegSecurityDAO
     {
         // way to connect to the DB
-        string connectionString = @"Data Source=(localdb)\ProjectsV13;Initial Catalog=Users;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+        string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=Minesweeper;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
 
         public bool userExists(RegisterRequest registerRequest)
         {
