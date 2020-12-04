@@ -17,7 +17,7 @@ namespace MilestoneCST247.Services.Data
             User user = null;
 
             // way to connect to the DB
-            string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=MineSweepr;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+            string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=Minesweeper;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
 
             // write an sql expression
             string queryString = "SELECT * FROM dbo.users WHERE username = @UserName AND password = @Password";
