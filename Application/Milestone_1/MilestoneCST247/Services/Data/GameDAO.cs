@@ -127,7 +127,8 @@ namespace MilestoneCST247.Services.Data
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                System.Diagnostics.Debug.WriteLine("Catch Exception in GameDAO method findGrid() in trying to pull or set user DB info, + exception message = " + e);
+
             }
 
             // if a grid exist you will now pull its cells, if none exist g will be passed as a null where g will be created in createGrid()
@@ -276,7 +277,7 @@ namespace MilestoneCST247.Services.Data
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e.Message);
+                    System.Diagnostics.Debug.WriteLine("Catch Exception in GameDAO method findGrid() in pulling cell section, + exception message = " + e);
                 }
 
             }

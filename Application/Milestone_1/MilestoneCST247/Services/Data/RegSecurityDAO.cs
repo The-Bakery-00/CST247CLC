@@ -50,7 +50,8 @@ namespace MilestoneCST247.Services.Data
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e.Message);
+                    System.Diagnostics.Debug.WriteLine("Catch Exception in RegSecurityDAO method userExist() + exception message = " + e);
+
                 }
                 return success;
             }
@@ -94,7 +95,7 @@ namespace MilestoneCST247.Services.Data
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e.Message);
+                    System.Diagnostics.Debug.WriteLine("Catch Exception in userExist() method emailExist() + exception message = " + e);
                 }
                 return success;
             }
@@ -140,7 +141,7 @@ namespace MilestoneCST247.Services.Data
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e.Message);
+                    System.Diagnostics.Debug.WriteLine("Catch Exception in RegSecurityDAO method createUser() + exception message = " + e);
                 }
                 return success;
             }
