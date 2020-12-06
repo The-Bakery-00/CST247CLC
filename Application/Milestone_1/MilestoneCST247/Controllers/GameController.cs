@@ -77,7 +77,10 @@ namespace MilestoneCST247.Controllers
                 gameService.activateCell(g, int.Parse(x), int.Parse(y));
 
                 //return same view with updated cell
-                return Index();
+                // return Index();
+
+                // AJAX Partial view update
+                return PartialView("GameBoard", g);
             }
             else
             {

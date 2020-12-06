@@ -53,6 +53,9 @@ namespace MilestoneCST247.Services.Business
                         g.Cells[x, y].Visited = true;
                     }
                 }
+
+                g.GameOver = true;
+
                 System.Diagnostics.Debug.WriteLine("Hit bomb at: " + X + ", " + Y);
             }
             else
@@ -60,11 +63,45 @@ namespace MilestoneCST247.Services.Business
                 if (g.Cells[X, Y].LiveNeighbors == 0)
                     revealSurroundingCells(g, g.Cells[X, Y].X, g.Cells[X, Y].Y);
 
+                //checks if game has been won
+                if (gameWon(g))
+                {
+
+                    //reveals whole grid
+                    for (int y = 0; y < g.Rows; y++)
+                    {
+                        for (int x = 0; x < g.Cols; x++)
+                        {
+                            g.Cells[x, y].Visited = true;
+                        }
+                    }
+
+                    g.GameOver = true;
+                }
+
             }
 
 
             gameDAO.updateGrid(g);
 
+        }
+
+        private Boolean gameWon(Grid g)
+        {
+            //loops through every cell and checks
+            //if there's still an unvisited cell that
+            //isn't a bomb
+            for (int y = 0; y < g.Rows; y++)
+            {
+                for (int x = 0; x < g.Cols; x++)
+                {
+                    if (!g.Cells[x, y].Visited && !g.Cells[x, y].Bomb)
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
         }
 
         private void revealSurroundingCells(Grid g, int x, int y)
