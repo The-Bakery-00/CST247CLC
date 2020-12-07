@@ -13,6 +13,7 @@ namespace MilestoneCST247.Controllers
         // GET: Game
         public ActionResult Index()
         {
+            //create user service
             UserService userService = new UserService();
 
             //check if user is logged in
@@ -22,18 +23,20 @@ namespace MilestoneCST247.Controllers
                 //create game service object
                 GameService gameService = new GameService();
 
-                //load grid for current user that is logged in
-                Grid g = gameService.findGrid(this);
+                //load grid for user
+                User user = (User)Session["user"];
+                Grid g = gameService.findGrid(user);
 
                 //check if user has an existing grid saved in db
                 if (g != null)
                 {
-                    // still need to do this section
+                    //grid exists for user
 
-                    //if (g.GameOver)
-                    //{
-                    //    regenerate new grid
-                    //}
+
+                    /*if (g.GameOver)
+                    {
+                        //regenerate new grid
+                    }*/
 
                 }
                 else
@@ -43,19 +46,21 @@ namespace MilestoneCST247.Controllers
                 }
 
 
-                //return game board view with newly generated or loaded grid for user
+                //return game board view with grid model
                 return View("Game", g);
 
             }
 
             else
             {
-                //Error no user is currently logged in
-                Error e = new Error("Cant access page! You are not Logged in! Please Log in!.");
+                //user isn't logged in
+                Error e = new Error("You must be logged in to access this page.");
 
                 return View("Error", e);
             }
         }
+
+
 
 
         //cell click form handle
@@ -63,29 +68,34 @@ namespace MilestoneCST247.Controllers
         public ActionResult activateCell(String id, String x, String y)
         {
 
+            //create userservice
             UserService userService = new UserService();
+
 
             //check if user is logged in
             if (userService.loggedIn(this))
             {
+                //update cell components
                 GameService gameService = new GameService();
 
-                //load user grid from DB
-                Grid g = gameService.findGrid(this);
-
-                //activate cell that was passed in from game view
+                //load user grid from db
+                User user = (User)Session["user"];
+                Grid g = gameService.findGrid(user);
+                g.Clicks += 1;
+                //activate cell logic
                 gameService.activateCell(g, int.Parse(x), int.Parse(y));
 
-                //return same view with updated cell
-                // return Index();
+                //return same view
+                //return Index();
 
-                // AJAX Partial view update
                 return PartialView("GameBoard", g);
+
+
             }
             else
             {
                 //user not logged in
-                Error e = new Error("Cant access page! You are not Logged in! Please Log in!.");
+                Error e = new Error("You must be logged in to access this page.");
 
                 return View("Error", e);
             }
@@ -95,16 +105,54 @@ namespace MilestoneCST247.Controllers
         [HttpGet]
         public ActionResult resetGrid()
         {
-            //deletes grid from DB
+            //deletes grid from db
 
             GameService gameService = new GameService();
-            gameService.removeGrid(this);
+            User user = (User)Session["user"];
+            gameService.removeGrid(user);
 
             //returns view
             return Index();
-
-
-
         }
+
+
+
+        [HttpGet]
+        public ActionResult publishGrid()
+        {
+            //publishes game results to db
+
+            //create userservice
+            UserService userService = new UserService();
+
+
+            //check if user is logged in
+            if (userService.loggedIn(this))
+            {
+                GameService gameService = new GameService();
+
+                //load user grid from db
+                User user = (User)Session["user"];
+                Grid g = gameService.findGrid(user);
+
+                //call service function to publish stats
+                gameService.publishGrid(g);
+
+                //return same view
+                return Index();
+
+
+            }
+            else
+            {
+                //user not logged in
+                Error e = new Error("You must be logged in to access this page.");
+
+                return View("Error", e);
+            }
+        }
+
+
+
     }
 }

@@ -56,6 +56,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -131,6 +132,7 @@
     <Compile Include="Models\Grid.cs" />
     <Compile Include="Models\LoginRequest.cs" />
     <Compile Include="Models\LoginResponse.cs" />
+    <Compile Include="Models\PublishedGame.cs" />
     <Compile Include="Models\RegisterRequest.cs" />
     <Compile Include="Models\RegisterResponse.cs" />
     <Compile Include="Models\User.cs" />

@@ -17,7 +17,7 @@ namespace MilestoneCST247.Services.Data
             User user = null;
 
             // way to connect to the DB
-            string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=MineSweepr;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+            string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=Minesweeper;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
 
             // write an sql expression
             string queryString = "SELECT * FROM dbo.users WHERE username = @UserName AND password = @Password";
@@ -39,135 +39,29 @@ namespace MilestoneCST247.Services.Data
                     // open the database and run the command
                 
                     connection.Open();
+                    // Using a DataReader see if query returns any rows
                     SqlDataReader reader = command.ExecuteReader();
-
                     while (reader.Read())
                     {
-                        Object o = new Object();
+                        int ID = int.Parse(reader["ID"].ToString());
+                        String username = reader["USERNAME"].ToString();
+                        String password = reader["PASSWORD"].ToString();
+                        String email = reader["EMAIL"].ToString();
+                        String firstname = reader["FIRSTNAME"].ToString();
+                        String lastname = reader["LASTNAME"].ToString();
+                        String gender = reader["GENDER"].ToString();
+                        int age = int.Parse(reader["AGE"].ToString());
+                        //String state = reader["STATE"].ToString();
 
-                        o = reader["ID"];
-                        int id = new int();
-                        // is value is not null assign to correctly and continue
-                        if (o != null)
-                        {
-                            id = int.Parse(reader["ID"].ToString());
-                        }
-                        // else the program will exist and give post description in the consol
-                        else
-                        {
-                            System.Diagnostics.Debug.WriteLine("Null value in UserDAO/findUser() while pulling value from table users, colum ID");
+                        user = new User(ID, username, password, email, firstname, lastname, gender, age);
 
-                        }
-
-                        o = reader["USERNAME"];
-                        String userName = null;
-                        // is value is not null assign to correctly and continue
-                        if (o != null)
-                        {
-                            userName = reader["USERNAME"].ToString();
-                        }
-                        // else the program will exist and give post description in the consol
-                        else
-                        {
-                            System.Diagnostics.Debug.WriteLine("Null value in UserDAO/findUser() while pulling value from table users, colum USERNAME");
-
-                        }
-
-                        o = reader["PASSWORD"];
-                        String password = null;
-                        // is value is not null assign to correctly and continue
-                        if (o != null)
-                        {
-                            password = reader["PASSWORD"].ToString();
-                        }
-                        // else the program will exist and give post description in the consol
-                        else
-                        {
-                            System.Diagnostics.Debug.WriteLine("Null value in UserDAO/findUser() while pulling value from table users, colum PASSWORD");
-
-                        }
-
-                        o = reader["FIRSTNAME"];
-                        String firstName = null;
-                        // is value is not null assign to correctly and continue
-                        if (o != null)
-                        {
-                            firstName = reader["FIRSTNAME"].ToString();
-                        }
-                        // else the program will exist and give post description in the consol
-                        else
-                        {
-                            System.Diagnostics.Debug.WriteLine("Null value in UserDAO/findUser() while pulling value from table users, colum FIRSTNAME");
-
-                        }
-
-                        o = reader["LASTNAME"];
-                        String lastName = null;
-                        // is value is not null assign to correctly and continue
-                        if (o != null)
-                        {
-                            lastName = reader["LASTNAME"].ToString();
-                        }
-                        // else the program will exist and give post description in the consol
-                        else
-                        {
-                            System.Diagnostics.Debug.WriteLine("Null value in UserDAO/findUser() while pulling value from table users, colum LASTNAME");
-
-                        }
-
-                        o = reader["EMAIL"];
-                        String email = null;
-                        // is value is not null assign to correctly and continue
-                        if (o != null)
-                        {
-                            email = reader["EMAIL"].ToString();
-                        }
-                        // else the program will exist and give post description in the consol
-                        else
-                        {
-                            System.Diagnostics.Debug.WriteLine("Null value in UserDAO/findUser() while pulling value from table users, colum EMAIL");
-
-                        }
-
-                        o = reader["GENDER"];
-                        String gender = null;
-                        // is value is not null assign to correctly and continue
-                        if (o != null)
-                        {
-                            gender = reader["GENDER"].ToString();
-                        }
-                        // else the program will exist and give post description in the consol
-                        else
-                        {
-                            System.Diagnostics.Debug.WriteLine("Null value in UserDAO/findUser() while pulling value from table users, colum GENDER");
-
-                        }
-
-                        o = reader["AGE"];
-                        int age = new int();
-                        // is value is not null assign to correctly and continue
-                        if (o != null)
-                        {
-                            age = int.Parse(reader["AGE"].ToString());
-                        }
-                        // else the program will exist and give post description in the consol
-                        else
-                        {
-                            System.Diagnostics.Debug.WriteLine("Null value in UserDAO/findUser() while pulling value from table users, colum AGE");
-
-                        }
-                        
-                        // create new user and assigned newly pulled values from DB to this user
-                        user = new User(id, userName, password, firstName, lastName, email, gender, age);
-                        
-                        
                     }
                     // close connection to DB
                     connection.Close();
                 }
                 
             }
-            catch (Exception e)
+            catch (SqlException e)
             {
                 Console.WriteLine(e.Message);
             }

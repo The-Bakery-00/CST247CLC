@@ -11,33 +11,38 @@ namespace MilestoneCST247.Models
         private int id;
         private string username;
         private string password;
+        private string email;
         private string firstName;
         private string lastName;
-        private string email;
         private string gender;
         private int age;
+
 
         public User()
         {
             this.id = -1;
             this.username = "";
             this.password = "";
+            this.email = "";
             this.firstName = "";
             this.lastName = "";
-            this.email = "";
             this.gender = "";
             this.age = 0;
+
+
         }
-        public User(int id, string userName, string password, string fistName, string lastName, string email, string gender, int age)
+
+        public User(int id, string username, string password, string email, string firstName, string lastName, string gender, int age)
         {
             this.id = id;
-            this.username = userName;
+            this.username = username;
             this.password = password;
-            this.firstName = fistName;
-            this.lastName = lastName;
             this.email = email;
+            this.firstName = firstName;
+            this.lastName = lastName;
             this.gender = gender;
             this.age = age;
+
         }
 
         public int Id { get => id; set => id = value; }
@@ -48,6 +53,5 @@ namespace MilestoneCST247.Models
         public string LastName { get => lastName; set => lastName = value; }
         public string Gender { get => gender; set => gender = value; }
         public int Age { get => age; set => age = value; }
-        
     }
 }

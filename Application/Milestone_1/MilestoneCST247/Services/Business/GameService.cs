@@ -10,11 +10,13 @@ namespace MilestoneCST247.Services.Business
 {
     public class GameService
     {
+        /** Game Service class **/
 
-        //returns grid for user
-        public Grid findGrid(Controller c)
+
+        //returns grid for userS
+        public Grid findGrid(User user)
         {
-            User user = (User)c.Session["user"];
+            //System.Diagnostics.Debug.WriteLine("Loading grid for: "+user.Email);
 
             GameDAO gameDAO = new GameDAO();
 
@@ -23,29 +25,62 @@ namespace MilestoneCST247.Services.Business
         }
 
         //deletes grid from db
-        public void removeGrid(Controller c)
+        public void removeGrid(User user)
         {
-            User user = (User)c.Session["user"];
-
             GameDAO gameDAO = new GameDAO();
 
             gameDAO.deleteGrid(user);
 
         }
 
+        public void publishGrid(Grid g)
+        {
+
+            GameDAO gameDAO = new GameDAO();
+
+            //updates grid in db
+
+            if (!gameDAO.gridPublished(g))
+                gameDAO.publishGrid(g);
+
+        }
+
+        public List<PublishedGame> getAllGames()
+        {
+            GameDAO gameDAO = new GameDAO();
+
+            //saves game stats to db
+            return gameDAO.getAllStats();
+        }
+
+        public Boolean testService()
+        {
+            GameDAO gameDAO = new GameDAO();
+
+            //saves game stats to db
+            return gameDAO.testService();
+        }
+
         //activates cell in grid
         public void activateCell(Grid g, int X, int Y)
         {
 
-            // this will make every cell that has been click on as actice and show its value, will them push updated cells and grid to DB
+            //loop through cells and find what needs to be revealed
+            //reveal these cells on the grid
+            //update grid to db
 
             GameDAO gameDAO = new GameDAO();
 
-            g.Cells[X, Y].Visited = true;  
+            Cell c = g.Cells[X, Y];
+
+            c.Visited = true;
 
 
-            if (g.Cells[X, Y].Bomb)
+            //checks if cell is a bomb
+            if (c.Bomb)
             {
+
+                //revelals all of grid
                 for (int y = 0; y < g.Rows; y++)
                 {
                     for (int x = 0; x < g.Cols; x++)
@@ -53,15 +88,15 @@ namespace MilestoneCST247.Services.Business
                         g.Cells[x, y].Visited = true;
                     }
                 }
-
                 g.GameOver = true;
 
                 System.Diagnostics.Debug.WriteLine("Hit bomb at: " + X + ", " + Y);
             }
             else
             {
-                if (g.Cells[X, Y].LiveNeighbors == 0)
-                    revealSurroundingCells(g, g.Cells[X, Y].X, g.Cells[X, Y].Y);
+                //recursively reveals neighboring cells that have no bombs around them
+                if (c.LiveNeighbors == 0)
+                    revealSurroundingCells(g, c.X, c.Y);
 
                 //checks if game has been won
                 if (gameWon(g))
@@ -81,10 +116,11 @@ namespace MilestoneCST247.Services.Business
 
             }
 
-
+            //updates grid in db
             gameDAO.updateGrid(g);
 
         }
+
 
         private Boolean gameWon(Grid g)
         {
@@ -106,7 +142,7 @@ namespace MilestoneCST247.Services.Business
 
         private void revealSurroundingCells(Grid g, int x, int y)
         {
-            //will check cells around cell that was clicked and reveal them
+            //calls revealnextCell function on every coordinate surrounding the target cell
             RevealNextCell(g, x - 1, y - 1);
             RevealNextCell(g, x - 1, y);
             RevealNextCell(g, x - 1, y + 1);
@@ -120,23 +156,24 @@ namespace MilestoneCST247.Services.Business
         private void RevealNextCell(Grid g, int x, int y)
         {
 
-            //check is cell is out of the limits
+            //checks if cell is in bounds
             if (!(x >= 0 && x < g.Cols && y >= 0 && y < g.Rows)) return;
 
-            //has the cell been visited already?
+            //checks if cell is visited
             if (g.Cells[x, y].Visited) return;
 
-            //will check is cell around contains a bomb
+            //checks if cell has any bombs around it
             if (g.Cells[x, y].LiveNeighbors == 0)
             {
-                //cell is marked as visited and recusively calls itself with neighnor cell
+                //sets cell to visited and calls recursive function to cycle through its neighbors
                 g.Cells[x, y].Visited = true;
                 revealSurroundingCells(g, x, y);
             }
 
-            //is cell a bomb?
+            //checks if cell isn't a bomb
             else if (!g.Cells[x, y].Bomb)
             {
+                //sets cell to visited
                 g.Cells[x, y].Visited = true;
             }
 
@@ -147,10 +184,10 @@ namespace MilestoneCST247.Services.Business
         {
             User user = (User)c.Session["user"];
 
-            Grid grid = new Grid(-1, width, height, user.Id, false);
+            Grid grid = new Grid(-1, width, height, user.Id, false, 0);
             Cell[,] cells = new Cell[width, height];
 
-            //creates cells
+            //intitialize cells
             for (int y = 0; y < height; y++)
             {
                 for (int x = 0; x < width; x++)
@@ -159,13 +196,13 @@ namespace MilestoneCST247.Services.Business
                 }
             }
 
-            //use rand to see if cell will be bomb or now
+            //activate cells
             Random rand = new Random();
             for (int y = 0; y < height; y++)
             {
                 for (int x = 0; x < width; x++)
                 {
-                    if (rand.Next(0, 100) <= 10)
+                    if (rand.Next(0, 100) <= 9)
                     {
                         cells[x, y].Bomb = true;
                         cells[x, y].LiveNeighbors = 9;
@@ -192,13 +229,13 @@ namespace MilestoneCST247.Services.Business
 
 
 
-            //this will send the new grid and cells to gameDAO
+            //pass Grid with populated cells to dao query
 
             GameDAO gameDAO = new GameDAO();
 
             gameDAO.createGrid(grid);
 
-            
+
             return grid;
         }
 
