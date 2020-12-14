@@ -33,6 +33,14 @@ namespace MilestoneCST247.Services.Business
 
         }
 
+        // REST FEATURES
+        public List<GameStats> getGameStats()
+        {
+            GameDAO gameDAO = new GameDAO();
+
+            return gameDAO.getGameStats();
+        }
+
         //activates cell in grid
         public void activateCell(Grid g, int X, int Y)
         {

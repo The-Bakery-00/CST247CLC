@@ -488,4 +488,7 @@ namespace MilestoneCST247.Services.Data
         }
 
     }
+
+    // REST FUNCTION to return player stats
+
 }

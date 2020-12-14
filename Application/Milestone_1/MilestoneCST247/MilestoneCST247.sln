@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.30611.23
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MilestoneCST247", "MilestoneCST247.csproj", "{072EB5BB-DBA9-46FA-A26C-44BF0D6F25D6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestService", "..\RestService\RestService.csproj", "{26E7ACF8-BDD0-4814-B0A8-09C893CE3E3D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{072EB5BB-DBA9-46FA-A26C-44BF0D6F25D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{072EB5BB-DBA9-46FA-A26C-44BF0D6F25D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{072EB5BB-DBA9-46FA-A26C-44BF0D6F25D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{26E7ACF8-BDD0-4814-B0A8-09C893CE3E3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{26E7ACF8-BDD0-4814-B0A8-09C893CE3E3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{26E7ACF8-BDD0-4814-B0A8-09C893CE3E3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26E7ACF8-BDD0-4814-B0A8-09C893CE3E3D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
