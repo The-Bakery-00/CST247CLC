@@ -133,6 +133,7 @@
     <Compile Include="Models\Grid.cs" />
     <Compile Include="Models\LoginRequest.cs" />
     <Compile Include="Models\LoginResponse.cs" />
+    <Compile Include="Models\PublishedGame.cs" />
     <Compile Include="Models\RegisterRequest.cs" />
     <Compile Include="Models\RegisterResponse.cs" />
     <Compile Include="Models\User.cs" />

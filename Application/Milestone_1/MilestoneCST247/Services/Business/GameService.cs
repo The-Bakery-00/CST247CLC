@@ -12,9 +12,9 @@ namespace MilestoneCST247.Services.Business
     {
 
         //returns grid for user
-        public Grid findGrid(Controller c)
+        public Grid findGrid(User user)
         {
-            User user = (User)c.Session["user"];
+            //User user = (User)c.Session["user"];
 
             GameDAO gameDAO = new GameDAO();
 
@@ -23,9 +23,9 @@ namespace MilestoneCST247.Services.Business
         }
 
         //deletes grid from db
-        public void removeGrid(Controller c)
+        public void removeGrid(User user)
         {
-            User user = (User)c.Session["user"];
+            //User user = (User)c.Session["user"];
 
             GameDAO gameDAO = new GameDAO();
 
@@ -34,11 +34,39 @@ namespace MilestoneCST247.Services.Business
         }
 
         // REST FEATURES
-        public List<GameStats> getGameStats()
+        //public List<GameStats> getGameStats()
+        //{
+        //GameDAO gameDAO = new GameDAO();
+
+        //   return gameDAO.getGameStats();
+        //}
+
+        public void publishGrid(Grid g)
+        {
+
+            GameDAO gameDAO = new GameDAO();
+
+            //updates grid in db
+
+            if (!gameDAO.gridPublished(g))
+                gameDAO.publishGrid(g);
+
+        }
+
+        public List<PublishedGame> getAllGames()
         {
             GameDAO gameDAO = new GameDAO();
 
-            return gameDAO.getGameStats();
+            //saves game stats to db
+            return gameDAO.getAllStats();
+        }
+
+        public Boolean testService()
+        {
+            GameDAO gameDAO = new GameDAO();
+
+            //saves game stats to db
+            return gameDAO.testService();
         }
 
         //activates cell in grid
@@ -155,7 +183,7 @@ namespace MilestoneCST247.Services.Business
         {
             User user = (User)c.Session["user"];
 
-            Grid grid = new Grid(-1, width, height, user.Id, false);
+            Grid grid = new Grid(-1, width, height, user.Id, false, 0);
             Cell[,] cells = new Cell[width, height];
 
             //creates cells

@@ -37,11 +37,11 @@
 
         <!-- Game board partial view which is updated via AJAX -->
 
-        @{ Html.Partial("GameBoard", Model); }
-       
+        @{ Html.RenderPartial("GameBoard", Model); }
+
     </div>
 
-     <!-- Reset Button--> >
+    <!-- Reset Button--> >
     <br>
     @using (Html.BeginForm("resetGrid", "Game", FormMethod.Get))
     {

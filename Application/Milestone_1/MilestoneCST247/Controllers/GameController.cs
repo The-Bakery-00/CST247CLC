@@ -23,7 +23,8 @@ namespace MilestoneCST247.Controllers
                 GameService gameService = new GameService();
 
                 //load grid for current user that is logged in
-                Grid g = gameService.findGrid(this);
+                User user = (User)Session["user"];
+                Grid g = gameService.findGrid(user);
 
                 //check if user has an existing grid saved in db
                 if (g != null)
@@ -71,8 +72,9 @@ namespace MilestoneCST247.Controllers
                 GameService gameService = new GameService();
 
                 //load user grid from DB
-                Grid g = gameService.findGrid(this);
-
+                User user = (User)Session["user"];
+                Grid g = gameService.findGrid(user);
+                g.Clicks += 1;
                 //activate cell that was passed in from game view
                 gameService.activateCell(g, int.Parse(x), int.Parse(y));
 
@@ -98,7 +100,8 @@ namespace MilestoneCST247.Controllers
             //deletes grid from DB
 
             GameService gameService = new GameService();
-            gameService.removeGrid(this);
+            User user = (User)Session["user"];
+            gameService.removeGrid(user);
 
             //returns view
             return Index();
@@ -106,5 +109,42 @@ namespace MilestoneCST247.Controllers
 
 
         }
+        [HttpGet]
+        public ActionResult publishGrid()
+        {
+            //publishes game results to db
+
+            //create userservice
+            UserService userService = new UserService();
+
+
+            //check if user is logged in
+            if (userService.loggedIn(this))
+            {
+                GameService gameService = new GameService();
+
+                //load user grid from db
+                User user = (User)Session["user"];
+                Grid g = gameService.findGrid(user);
+
+                //call service function to publish stats
+                gameService.publishGrid(g);
+
+                //return same view
+                return Index();
+
+
+            }
+            else
+            {
+                //user not logged in
+                Error e = new Error("You must be logged in to access this page.");
+
+                return View("Error", e);
+            }
+        }
+
+
+
     }
 }

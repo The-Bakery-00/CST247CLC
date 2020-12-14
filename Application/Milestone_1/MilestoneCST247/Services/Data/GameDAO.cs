@@ -1,6 +1,7 @@
 ﻿using MilestoneCST247.Models;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
@@ -31,97 +32,28 @@ namespace MilestoneCST247.Services.Data
                     SqlCommand command = new SqlCommand(queryString, connection);
 
                     // Set query parameters and their values, this helps prevent from attacks
-                    command.Parameters.Add("@id", System.Data.SqlDbType.Int, 11).Value = user.Id; 
+                    command.Parameters.Add("@id", System.Data.SqlDbType.Int, 11).Value = user.Id;
 
                     // open the database, establsih connection and execute query
                     connection.Open();
 
+                    // Using a DataReader see if query returns any rows
                     SqlDataReader reader = command.ExecuteReader();
-
                     while (reader.Read())
                     {
-                        Object o = new Object();
+                        int ID = int.Parse(reader["ID"].ToString());
+                        int rows = int.Parse(reader["ROWS"].ToString());
+                        int cols = int.Parse(reader["COLS"].ToString());
+                        int USER_ID = int.Parse(reader["USERID"].ToString());
+                        Boolean GAMEOVER = Boolean.Parse(reader["GAMEOVER"].ToString());
+                        int clicks = int.Parse(reader["CLICKS"].ToString());
 
-                        o = reader["ID"];
-                        int ID = new int();
-                        // is value is not null assign to correctly and continue
-                        if (o != null)
-                        {
-                            ID = int.Parse(reader["ID"].ToString());
-                        }
-                        // else the program will exist and give post description in the consol
-                        else
-                        {
-                            System.Diagnostics.Debug.WriteLine("Null value in GameDAO/findGrid() while pulling value from table grids, colum ID");
-
-                        }
-
-                        o = reader["ROWS"];
-                        int rows = new int();
-                        // is value is not null assign to correctly and continue
-                        if (o != null)
-                        {
-                            rows = int.Parse(reader["ROWS"].ToString());
-                        }
-                        // else the program will exist and give post description in the consol
-                        else
-                        {
-                            System.Diagnostics.Debug.WriteLine("Null value in GameDAO/findGrid() while pulling value from table grids, colum ROWS");
-
-                        }
-
-                        o = reader["COLS"];
-                        int cols = new int();
-                        // is value is not null assign to correctly and continue
-                        if (o != null)
-                        {
-                            cols = int.Parse(reader["COLS"].ToString());
-                        }
-                        // else the program will exist and give post description in the consol
-                        else
-                        {
-                            System.Diagnostics.Debug.WriteLine("Null value in GameDAO/findGrid() while pulling value from table grids, colum COLS");
-
-                        }
-
-                        o = reader["USERID"];
-                        int USER_ID = new int();
-                        // is value is not null assign to correctly and continue
-                        if (o != null)
-                        {
-                            USER_ID = int.Parse(reader["USERID"].ToString());
-                        }
-                        // else the program will exist and give post description in the consol
-                        else
-                        {
-                            System.Diagnostics.Debug.WriteLine("Null value in GameDAO/findGrid() while pulling value from table grids, colum USERID");
-
-                        }
-
-                        o = reader["GAMEOVER"];
-                        Boolean GAMEOVER = new Boolean();
-                        // is value is not null assign to correctly and continue
-                        if (o != null)
-                        {
-                            GAMEOVER = Boolean.Parse(reader["GAMEOVER"].ToString());
-                        }
-                        // else the program will exist and give post description in the consol
-                        else
-                        {
-                            System.Diagnostics.Debug.WriteLine("Null value in GameDAO/findGrid() while pulling value from table grids, colum GAMEOVER");
-
-                        }
-                        
-                    
-                        // create new grid and pass values into it, then create new cells list in which values will be assigned below
-                        g = new Grid(ID, rows, cols, USER_ID, GAMEOVER);
+                        g = new Grid(ID, rows, cols, USER_ID, GAMEOVER, clicks);
                         g.Cells = new Cell[cols, rows];
                     }
 
                     // Close the connection
                     connection.Close();
-                    System.Diagnostics.Debug.WriteLine("Youre in gameDAO findGrid() after connecting to grid DB");
-
                 }
 
             }
@@ -147,7 +79,7 @@ namespace MilestoneCST247.Services.Data
                         SqlCommand command = new SqlCommand(queryString, connection);
 
                         // Set query parameters and their values
-                        command.Parameters.Add("@id", System.Data.SqlDbType.Int, 11).Value = g.Id; 
+                        command.Parameters.Add("@id", System.Data.SqlDbType.Int, 11).Value = g.Id;
 
 
                         // open the database and run the command
@@ -257,7 +189,7 @@ namespace MilestoneCST247.Services.Data
                                 System.Diagnostics.Debug.WriteLine("Null value in GameDAO/findGrid() while pulling value from table cells, colum GRIDID");
 
                             }
-                            
+
                             // create new cell and pass the newly pulled values to that cell, then assign said cell to the correct x,y in cells list
                             Cell c = new Cell(x, y);
                             c.Id = ID;
@@ -282,7 +214,7 @@ namespace MilestoneCST247.Services.Data
 
             }
 
-            
+
             return g;
         }
 
@@ -291,47 +223,46 @@ namespace MilestoneCST247.Services.Data
         {
 
             int gridID = -1;
-
             try
             {
                 // Setup INSERT query with parameters
-                string queryString = "INSERT INTO dbo.grids (ROWS, COLS, USERID, GAMEOVER) " +
-                    "VALUES (@Rows, @Cols, @User_ID, @GameOver) SELECT SCOPE_IDENTITY()";
+                string query = "INSERT INTO dbo.grids (ROWS, COLS, USERID, GAMEOVER, CLICKS) " +
+                    "VALUES (@Rows, @Cols, @User_ID, @GameOver, @clicks) SELECT SCOPE_IDENTITY()";
 
                 // Create connection and command
-                using (SqlConnection connection = new SqlConnection(connectionString))
+                using (SqlConnection cn = new SqlConnection(connectionString))
+                using (SqlCommand cmd = new SqlCommand(query, cn))
                 {
-
-                    // create the command and parameter objects
-
-                    SqlCommand command = new SqlCommand(queryString, connection);
-
                     // Set query parameters and their values
-                    command.Parameters.Add("@Rows", System.Data.SqlDbType.Int, 11).Value = grid.Rows;
-                    command.Parameters.Add("@Cols", System.Data.SqlDbType.Int, 11).Value = grid.Cols;
-                    command.Parameters.Add("@User_ID", System.Data.SqlDbType.Int, 11).Value = grid.Userid;
-                    command.Parameters.Add("@GameOver", System.Data.SqlDbType.Bit).Value = grid.GameOver;
-                    
-                    // open the database and run the command
+                    cmd.Parameters.Add("@Rows", SqlDbType.Int, 11).Value = grid.Rows;
+                    cmd.Parameters.Add("@Cols", SqlDbType.Int, 11).Value = grid.Cols;
+                    cmd.Parameters.Add("@User_ID", SqlDbType.Int, 11).Value = grid.Userid;
+                    cmd.Parameters.Add("@GameOver", SqlDbType.Bit).Value = grid.GameOver;
+                    cmd.Parameters.Add("@clicks", SqlDbType.Int, 11).Value = grid.Clicks;
 
-                    connection.Open();
-                    gridID = Convert.ToInt32(command.ExecuteScalar());
 
-                    // Close the connection
-                    connection.Close();
+                    // Open the connection, execute INSERT, and close the connection
+                    cn.Open();
+                    gridID = Convert.ToInt32(cmd.ExecuteScalar());
+
+                    cn.Close();
+
+
 
                 }
+
             }
-            catch (Exception e)
+            catch (SqlException e)
             {
-                Console.WriteLine(e.Message);
+                // TODO: should log exception and then throw a custom exception
+                throw e;
             }
 
 
             try
             {
                 // Setup INSERT query with parameters
-                string queryString = "INSERT INTO dbo.cells (X, Y, BOMB, VISITED, LIVENEIGHBORS, GRIDID) " +
+                string query = "INSERT INTO dbo.cells (X, Y, BOMB, VISITED, LIVENEIGHBORS, GRIDID) " +
                     "VALUES (@x, @y, @bomb, @visited, @live, @grid)";
 
                 // Create connection and command
@@ -339,22 +270,21 @@ namespace MilestoneCST247.Services.Data
                 {
                     for (int x = 0; x < grid.Cols; x++)
                     {
-                        using (SqlConnection connection = new SqlConnection(connectionString))
+                        using (SqlConnection cn = new SqlConnection(connectionString))
+                        using (SqlCommand cmd = new SqlCommand(query, cn))
                         {
-                            SqlCommand command = new SqlCommand(queryString, connection);
-
                             // Set query parameters and their values
-                            command.Parameters.Add("@x", System.Data.SqlDbType.Int, 11).Value = grid.Cells[x, y].X;
-                            command.Parameters.Add("@y", System.Data.SqlDbType.Int, 11).Value = grid.Cells[x, y].Y;
-                            command.Parameters.Add("@bomb", System.Data.SqlDbType.Bit).Value = grid.Cells[x, y].Bomb;
-                            command.Parameters.Add("@visited", System.Data.SqlDbType.Bit).Value = grid.Cells[x, y].Visited;
-                            command.Parameters.Add("@live", System.Data.SqlDbType.Int, 11).Value = grid.Cells[x, y].LiveNeighbors;
-                            command.Parameters.Add("@grid", System.Data.SqlDbType.Int, 11).Value = gridID;
+                            cmd.Parameters.Add("@x", SqlDbType.Int, 11).Value = grid.Cells[x, y].X;
+                            cmd.Parameters.Add("@y", SqlDbType.Int, 11).Value = grid.Cells[x, y].Y;
+                            cmd.Parameters.Add("@bomb", SqlDbType.Bit).Value = grid.Cells[x, y].Bomb;
+                            cmd.Parameters.Add("@visited", SqlDbType.Bit).Value = grid.Cells[x, y].Visited;
+                            cmd.Parameters.Add("@live", SqlDbType.Int, 11).Value = grid.Cells[x, y].LiveNeighbors;
+                            cmd.Parameters.Add("@grid", SqlDbType.Int, 11).Value = gridID;
 
                             // Open the connection, execute INSERT, and close the connection
-                            connection.Open();
-                            int rows = command.ExecuteNonQuery();
-                            connection.Close();
+                            cn.Open();
+                            int rows = cmd.ExecuteNonQuery();
+                            cn.Close();
 
 
 
@@ -363,9 +293,10 @@ namespace MilestoneCST247.Services.Data
                 }
 
             }
-            catch (Exception e)
+            catch (SqlException e)
             {
-                Console.WriteLine(e.Message);
+                // TODO: should log exception and then throw a custom exception
+                throw e;
             }
 
 
@@ -381,34 +312,35 @@ namespace MilestoneCST247.Services.Data
             {
                 // Setup INSERT query with parameters
 
-                string queryString = "UPDATE dbo.grids SET ROWS = @Rows, COLS = @Cols, USERID = @User_ID, GAMEOVER = @GameOver WHERE ID=@id";
+                string query = "UPDATE dbo.grids SET ROWS = @Rows, COLS = @Cols, USERID = @User_ID, GAMEOVER = @GameOver, CLICKS = @clicks WHERE ID=@id";
 
                 // Create connection and command
-                using (SqlConnection connection = new SqlConnection(connectionString))
+                using (SqlConnection cn = new SqlConnection(connectionString))
+                using (SqlCommand cmd = new SqlCommand(query, cn))
                 {
-                    SqlCommand command = new SqlCommand(queryString, connection);
-
                     // Set query parameters and their values
-                    command.Parameters.Add("@Rows", System.Data.SqlDbType.Int, 11).Value = grid.Rows;
-                    command.Parameters.Add("@Cols", System.Data.SqlDbType.Int, 11).Value = grid.Cols;
-                    command.Parameters.Add("@User_ID", System.Data.SqlDbType.Int, 11).Value = grid.Userid;
-                    command.Parameters.Add("@GameOver", System.Data.SqlDbType.Bit).Value = grid.GameOver;
-                    command.Parameters.Add("@id", System.Data.SqlDbType.Int, 11).Value = grid.Id;
+                    cmd.Parameters.Add("@Rows", SqlDbType.Int, 11).Value = grid.Rows;
+                    cmd.Parameters.Add("@Cols", SqlDbType.Int, 11).Value = grid.Cols;
+                    cmd.Parameters.Add("@User_ID", SqlDbType.Int, 11).Value = grid.Userid;
+                    cmd.Parameters.Add("@GameOver", SqlDbType.Bit).Value = grid.GameOver;
+                    cmd.Parameters.Add("@id", SqlDbType.Int, 11).Value = grid.Id;
+                    cmd.Parameters.Add("@clicks", SqlDbType.Int, 11).Value = grid.Clicks;
 
                     // Open the connection, execute INSERT, and close the connection
-                    connection.Open();
-                    command.ExecuteNonQuery();
+                    cn.Open();
+                    cmd.ExecuteNonQuery();
 
-                    connection.Close();
+                    cn.Close();
 
 
 
                 }
 
             }
-            catch (Exception e)
+            catch (SqlException e)
             {
-                Console.WriteLine(e.Message);
+                // TODO: should log exception and then throw a custom exception
+                throw e;
             }
 
 
@@ -416,7 +348,7 @@ namespace MilestoneCST247.Services.Data
             {
                 // Setup INSERT query with parameters
 
-                string queryString = "UPDATE dbo.cells SET X = @x, Y = @y, BOMB = @bomb, VISITED = @visited, LIVENEIGHBORS = @live, " +
+                string query = "UPDATE dbo.cells SET X = @x, Y = @y, BOMB = @bomb, VISITED = @visited, LIVENEIGHBORS = @live, " +
                     "GRIDID = @grid WHERE ID=@id";
 
 
@@ -426,31 +358,31 @@ namespace MilestoneCST247.Services.Data
                 {
                     for (int x = 0; x < grid.Cols; x++)
                     {
-                        using (SqlConnection connection = new SqlConnection(connectionString))
+                        using (SqlConnection cn = new SqlConnection(connectionString))
+                        using (SqlCommand cmd = new SqlCommand(query, cn))
                         {
-                            SqlCommand command = new SqlCommand(queryString, connection);
-
                             // Set query parameters and their values
-                            command.Parameters.Add("@x", System.Data.SqlDbType.Int, 11).Value = grid.Cells[x, y].X;
-                            command.Parameters.Add("@y", System.Data.SqlDbType.Int, 11).Value = grid.Cells[x, y].Y;
-                            command.Parameters.Add("@bomb", System.Data.SqlDbType.Bit).Value = grid.Cells[x, y].Bomb;
-                            command.Parameters.Add("@visited", System.Data.SqlDbType.Bit).Value = grid.Cells[x, y].Visited;
-                            command.Parameters.Add("@live", System.Data.SqlDbType.Int, 11).Value = grid.Cells[x, y].LiveNeighbors;
-                            command.Parameters.Add("@grid", System.Data.SqlDbType.Int, 11).Value = grid.Id;
-                            command.Parameters.Add("@id", System.Data.SqlDbType.Int, 11).Value = grid.Cells[x, y].Id;
+                            cmd.Parameters.Add("@x", SqlDbType.Int, 11).Value = grid.Cells[x, y].X;
+                            cmd.Parameters.Add("@y", SqlDbType.Int, 11).Value = grid.Cells[x, y].Y;
+                            cmd.Parameters.Add("@bomb", SqlDbType.Bit).Value = grid.Cells[x, y].Bomb;
+                            cmd.Parameters.Add("@visited", SqlDbType.Bit).Value = grid.Cells[x, y].Visited;
+                            cmd.Parameters.Add("@live", SqlDbType.Int, 11).Value = grid.Cells[x, y].LiveNeighbors;
+                            cmd.Parameters.Add("@grid", SqlDbType.Int, 11).Value = grid.Id;
+                            cmd.Parameters.Add("@id", SqlDbType.Int, 11).Value = grid.Cells[x, y].Id;
                             // Open the connection, execute INSERT, and close the connection
-                            connection.Open();
-                            int rows = command.ExecuteNonQuery();
-                            connection.Close();
+                            cn.Open();
+                            int rows = cmd.ExecuteNonQuery();
+                            cn.Close();
 
                         }
                     }
                 }
 
             }
-            catch (Exception e)
+            catch (SqlException e)
             {
-                Console.WriteLine(e.Message);
+                // TODO: should log exception and then throw a custom exception
+                throw e;
             }
 
 
@@ -465,30 +397,188 @@ namespace MilestoneCST247.Services.Data
 
             try
             {
-                // DELETE query to delete old grid 
-                string queryString = "DELETE FROM dbo.grids WHERE USERID=@Id";
+                string query = "DELETE FROM dbo.grids WHERE USERID=@Id ";
 
 
-                using (SqlConnection connection = new SqlConnection(connectionString))
+                using (SqlConnection cn = new SqlConnection(connectionString))
+                using (SqlCommand cmd = new SqlCommand(query, cn))
                 {
-                    SqlCommand command = new SqlCommand(queryString, connection);
-
-                    command.Parameters.AddWithValue("@Id", user.Id);
-                    connection.Open();
-                    command.ExecuteNonQuery();
-                    connection.Close();
+                    cmd.Parameters.AddWithValue("@Id", user.Id);
+                    cn.Open();
+                    cmd.ExecuteNonQuery();
+                    cn.Close();
                 }
             }
-            catch (Exception e)
+            catch (SqlException e)
             {
-                Console.WriteLine(e.Message);
+                // TODO: should log exception and then throw a custom exception
+                throw e;
             }
 
 
         }
 
+        //checks if game results have already been published 
+        public Boolean gridPublished(Grid g)
+        {
+            bool result = false;
+
+            try
+            {
+                // Setup SELECT query with parameters
+                string query = "SELECT * FROM dbo.games WHERE ID=@id";
+
+                // Create connection and command
+                using (SqlConnection cn = new SqlConnection(connectionString))
+                using (SqlCommand cmd = new SqlCommand(query, cn))
+                {
+                    // Set query parameters and their values
+                    cmd.Parameters.Add("@id", SqlDbType.Int, 11).Value = g.Id;
+
+                    // Open the connection
+                    cn.Open();
+
+                    // Using a DataReader see if query returns any rows
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    if (reader.HasRows)
+                        result = true;
+                    else
+                        result = false;
+
+                    // Close the connection
+                    cn.Close();
+                }
+
+            }
+            catch (SqlException e)
+            {
+                // TODO: should log exception and then throw a custom exception
+                throw e;
+            }
+
+            // Return result of finder
+            return result;
+        }
+
+
+        //saves game stats to db table 'games'
+        public void publishGrid(Grid g)
+        {
+            try
+            {
+                // Setup INSERT query with parameters
+                string query = "INSERT INTO dbo.games (GRIDID, USERID, CLICKS) " +
+                    "VALUES (@Gridid, @Userid, @Clicks)";
+
+                // Create connection and command
+                using (SqlConnection cn = new SqlConnection(connectionString))
+                using (SqlCommand cmd = new SqlCommand(query, cn))
+                {
+                    // Set query parameters and their values
+                    cmd.Parameters.Add("@Gridid", SqlDbType.Int, 11).Value = g.Id;
+                    cmd.Parameters.Add("@Userid", SqlDbType.Int, 11).Value = g.Userid;
+                    cmd.Parameters.Add("@Clicks", SqlDbType.Int, 11).Value = g.Clicks;
+
+                    // Open the connection, execute INSERT, and close the connection
+                    cn.Open();
+                    cmd.ExecuteNonQuery();
+                    cn.Close();
+
+                }
+
+            }
+            catch (SqlException e)
+            {
+                // TODO: should log exception and then throw a custom exception
+                throw e;
+            }
+        }
+
+
+        //returns all game stats in a list
+        public List<PublishedGame> getAllStats()
+        {
+            List<PublishedGame> games = new List<PublishedGame>();
+
+            try
+            {
+                // Setup SELECT query with parameters
+                string query = "SELECT * FROM dbo.games";
+
+                // Create connection and command
+                using (SqlConnection cn = new SqlConnection(connectionString))
+                using (SqlCommand cmd = new SqlCommand(query, cn))
+                {
+
+                    // Open the connection
+                    cn.Open();
+
+                    // Using a DataReader see if query returns any rows
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        int ID = int.Parse(reader["ID"].ToString());
+                        int gridid = int.Parse(reader["GRIDID"].ToString());
+                        int userid = int.Parse(reader["USERID"].ToString());
+                        int clicks = int.Parse(reader["CLICKS"].ToString());
+
+                        games.Add(new PublishedGame(ID, gridid, userid, clicks));
+                    }
+
+                    // Close the connection
+                    cn.Close();
+                }
+
+            }
+            catch (SqlException e)
+            {
+                throw e;
+            }
+
+            return games;
+        }
+
+
+        //test db connectivity
+        public Boolean testService()
+        {
+            List<PublishedGame> games = new List<PublishedGame>();
+
+            try
+            {
+                // Setup SELECT query with parameters
+                string query = "SELECT 1";
+
+                // Create connection and command
+                using (SqlConnection cn = new SqlConnection(connectionString))
+                using (SqlCommand cmd = new SqlCommand(query, cn))
+                {
+
+                    // Open the connection
+                    cn.Open();
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    if (reader.Read())
+                    {
+                        return true;
+                    }
+                    // Close the connection
+                    cn.Close();
+                }
+
+            }
+            catch (SqlException e)
+            {
+                return false;
+            }
+
+            return false;
+        }
+
+
+
+
     }
 
-    // REST FUNCTION to return player stats
 
 }

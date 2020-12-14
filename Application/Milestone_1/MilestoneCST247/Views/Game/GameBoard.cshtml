@@ -8,78 +8,101 @@
 <table>
 
     @for (var y = 0; y < Model.Rows; y++)
-      {
-<tr>
+    {
+        <tr>
             @for (var x = 0; x < Model.Cols; x++)
-              {
-                    //nested for loop that loops through every row and collumn of game cells
-                    //and displays a grid
-<td>
+            {
+                //nested for loop that loops through every row and collumn of game cells
+                //and displays a grid
+                <td>
 
-                     @if (Model.Cells[x, y].Visited)
-                       {
-                    
-                            if (Model.Cells[x, y].Bomb)
-                             {
-    <div>
-        <img src="~/Images/bomb.jpg" style="width:31px; height:32px; display:block;" border="0" />
-    </div> 
-                             }
-                             else
-                              {
+                    @if (Model.Cells[x, y].Visited)
+                    {
 
-                                if (Model.Cells[x, y].LiveNeighbors > 0)
-                                 {
-                                    switch (Model.Cells[x, y].LiveNeighbors)
-                                     {
-                                                case 1:
-                                                @:<font color="blue">
-                                                    break;
-                                                case 2:
-                                                @:<font color="green">
-                                                    break;
-                                                case 3:
+                        if (Model.Cells[x, y].Bomb)
+                        {
+                            <div>
+                                <img src="~/Images/bomb.jpg" style="width:31px; height:32px; display:block;" border="0" />
+                            </div>
+                        }
+                        else
+                        {
+
+                            if (Model.Cells[x, y].LiveNeighbors > 0)
+                            {
+                                switch (Model.Cells[x, y].LiveNeighbors)
+                                {
+                                    case 1:
+                                        @:<font color="blue">
+                                            break;
+                                        case 2:
+                                            @:<font color="green">
+                                                break;
+                                            case 3:
                                                 @:<font color="red">
                                                     break;
 
                                                 default:
-                                                @:<font color="purple">
-                                                    break;
-                                     }
+                                                    @:<font color="purple">
+                                                        break;
+                                                }
 
                                                 @Model.Cells[x, y].LiveNeighbors
-                                                @:</font>
+                                            @:</font>
 
-                                 }
-                              }
 
-                       }
-                                                else
-                                                 {
 
-                                                    //ajax form for cells
-                                                    using (Ajax.BeginForm("activateCell", "Game",
-                                                    new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "gamePartial" }))
-                                                     {
-                                                        //parameter values id, x, y
-                                                        <input type="hidden" name="id" value=@Model.Cells[x, y].Id>
-                                                        <input type="hidden" name="x" value=@Model.Cells[x, y].X>
-                                                        <input type="hidden" name="y" value=@Model.Cells[x, y].Y>
-                                                        <input type="image" name="submit" src="~/images/blockGrey.png" style="width:31px; height:32px; display:block;" border="0" alt="Submit" />
-                                                     }
-                                                 }
 
-</td>         }
 
-</tr>}
+
+
+
+                                        }
+                                    }
+
+                                }
+                                else
+                                {
+
+                                    //ajax form for cells
+                                    using (Ajax.BeginForm("activateCell", "Game",
+                                    new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "gamePartial" }))
+                                    {
+                                        //parameter values id, x, y
+                                        <input type="hidden" name="id" value=@Model.Cells[x, y].Id>
+                                        <input type="hidden" name="x" value=@Model.Cells[x, y].X>
+                                        <input type="hidden" name="y" value=@Model.Cells[x, y].Y>
+                                        <input type="image" name="submit" src="~/images/blockGrey.png" style="width:31px; height:32px; display:block;" border="0" alt="Submit" />
+                                    }
+                                }
+
+    </td>
+}
+
+        </tr>
+    }
 
 
 </table>
+Clicks: @Model.Clicks
+<br />
 <p>Last move made on @DateTime.Now</p>
 
 
 
 @if (Model.GameOver)
 {
-@:<font color="red">Game Over </font>
+    @:<font color="red">Game Over </font>
+
+
+
+
+    using (Html.BeginForm("publishGrid", "Game", FormMethod.Get))
+    {
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Publish Game" class="btn btn-default" />
+            </div>
+        </div>
+    }
 }
