@@ -1,22 +1,17 @@
 ﻿<div align="center">
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
-    <h1>CLC Minesweeper Application</h1>
+    <h2 class="jumbotron">CLC Minesweeper Application</h2>
+    <hr />
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                @Html.ActionLink("Home", "", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            <div style="float: right">
+
+                @Html.ActionLink("Home", "", "Home", new { area = "" }, new { @class = "btn btn-primary" })
+                @Html.ActionLink("Login", "index", "login", new { area = "" }, new { @class = "btn btn-primary" })
+                @Html.ActionLink("Register", "index", "register", new { area = "" }, new { @class = "btn btn-primary" })
             </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav navbar-right">
-                    @Html.ActionLink("Login", "index", "login", new { area = "" }, new { @class = "navbar-brand" })
-                    @Html.ActionLink("Register", "index", "register", new { area = "" }, new { @class = "navbar-brand" })
-                </ul>
-            </div>
+
         </div>
     </div>
 </div>
