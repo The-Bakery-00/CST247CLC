@@ -36,10 +36,6 @@ namespace MilestoneCST247
               url: "{Game}",
               defaults: new { controller = "Game", action = "Index", id = UrlParameter.Optional }
           );
-
-
-
-
         }
     }
 }

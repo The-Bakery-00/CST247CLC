@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MilestoneCST247.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -6,9 +7,10 @@ using System.Web;
 
 namespace RestService
 {
+    [DataContract]
     public class StatsDTO
     {
-        public StatsDTO (int ErrorCode, string ErrorMsg, List<GameStats> Data)
+        public StatsDTO (int ErrorCode, string ErrorMsg, List<PublishedGame> Data)
         {
             this.ErrorCode = ErrorCode;
             this.ErrorMsg = ErrorMsg;
@@ -17,7 +19,9 @@ namespace RestService
 
         [DataMember]
         public int ErrorCode { get; set; }
+        [DataMember]
         public string ErrorMsg { get; set; }
-        public List<GameStats> Data { get; set; }
+        [DataMember]
+        public List<PublishedGame> Data { get; set; }
     }
 }
