@@ -11,6 +11,7 @@ namespace MilestoneCST247.Controllers
     public class GameController : Controller
     {
         // GET: Game
+        [CustomAuthorization]
         public ActionResult Index()
         {
             UserService userService = new UserService();
@@ -74,7 +75,7 @@ namespace MilestoneCST247.Controllers
                 //load user grid from DB
                 User user = (User)Session["user"];
                 Grid g = gameService.findGrid(user);
-                g.Clicks += 1;
+                g.Clicks++;
                 //activate cell that was passed in from game view
                 gameService.activateCell(g, int.Parse(x), int.Parse(y));
 
@@ -105,8 +106,6 @@ namespace MilestoneCST247.Controllers
 
             //returns view
             return Index();
-
-
 
         }
         [HttpGet]

@@ -6,27 +6,38 @@ using System.Web;
 
 namespace MilestoneCST247.Models
 {
-    public class GameStats
+    public class GameStats : IComparable
     {
         [DataMember]
-        int id;
-        int gridid;
-        int userid;
-        int clicks;
+        public int Id { get; set; }
+        public int Gridid { get; set; }
+        public int Userid { get; set; }
+        public int Clicks { get; set; }
 
-        public GameStats (int id, int gridid, int userid, int clicks)
+        public GameStats ()
         {
-            this.id = id;
-            this.gridid = gridid;
-            this.userid = userid;
-            this.clicks = clicks;
+            this.Id = 0;
+            this.Gridid = 0;
+            this.Userid = 0;
+            this.Clicks = 0;
         }
 
-        public int Id { get => id; set => id = value; }
-        public int Gridd { get => gridid; set => gridid = value; }
-        public int Userid { get => userid; set => userid = value; }
-        public int Clicks { get => clicks; set => clicks = value; }
+        public int id { get => id; set => id = value; }
+        public int gridid { get => gridid; set => gridid = value; }
+        public int userid { get => userid; set => userid = value; }
+        public int clicks { get => clicks; set => clicks = value; }
 
+        public int CompareTo(object obj)
+        {
+            if (obj == null) return 1;
+            GameStats p2 = (GameStats)obj;
+            if (this.Clicks < p2.Clicks)
+                return 1;
+            if (this.Clicks > p2.Clicks)
+                return -1;
+            else
+                return 0;
+        }
 
     }
 }

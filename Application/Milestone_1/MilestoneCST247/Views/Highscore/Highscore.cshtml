@@ -1,0 +1,25 @@
+﻿@using MilestoneCST247.Models
+@model Tuple<User, List<MilestoneCST247.Models.GameStats>>
+@{
+    ViewBag.Title = "Highscore";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@Model.Item1.FirstName @Model.Item1.LastName here are the highscores!</h2>
+@using (Html.BeginForm("Index", "Game", FormMethod.Post))
+{
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Play Game!" class="btn btn-default" />
+        </div>
+    </div>
+}
+
+<div class="row">
+    <div class="row">
+        <div class="sColumn" style="background-color:#aaa;">
+            <p class="text-center">High Scores</p> 
+                @Html.Partial("~/Views/Highscore/_Scores.cshtml", Model.Item2)
+            </div>
+        </div>
+</div>

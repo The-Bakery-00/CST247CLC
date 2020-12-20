@@ -113,6 +113,70 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                                         }
                                     }
 
@@ -149,7 +213,8 @@ Clicks: @Model.Clicks
 @if (Model.GameOver)
 {
     @:<font color="red">Game Over</font>
-    <br /> <div></div>
+    <br />
+    <div></div>
     using (Html.BeginForm("publishGrid", "Game", FormMethod.Get))
     {
         <div class="form-group">
@@ -159,9 +224,18 @@ Clicks: @Model.Clicks
         </div>
     }
 
+    using (Html.BeginForm("Index", "Highscore", FormMethod.Get))
+    {
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Highscores" class="btn btn-primary" />
+            </div>
+        </div>
+    }
+
 }
 
-<!-- Reset Button--> 
+<!-- Reset Button-->
 @using (Html.BeginForm("resetGrid", "Game", FormMethod.Get))
 {
     <div class="form-group">

@@ -1,0 +1,36 @@
+﻿
+@model List<MilestoneCST247.Models.GameStats>
+
+<table class="table">
+    <tr>
+        <th>
+            Id
+        </th>
+        <th>
+            GridId
+        </th>
+        <th>
+            Clicks
+        </th>
+        <th>
+            User Id
+        </th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(m => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(m => item.Gridid)
+            </td>
+            <td>
+                @Html.DisplayFor(m => item.Clicks)
+            </td>
+            <td>
+                @Html.DisplayFor(m => item.Userid)
+            </td>
+        </tr>
+    }
+</table>
