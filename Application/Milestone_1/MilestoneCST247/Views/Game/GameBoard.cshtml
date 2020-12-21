@@ -4,16 +4,16 @@
 
 
 
+<div class="row justify-content-center">
+    <div class="col-auto">
 
-<table>
+<table class="trable table-responsive">
 
     @for (var y = 0; y < Model.Rows; y++)
     {
         <tr>
             @for (var x = 0; x < Model.Cols; x++)
             {
-                //nested for loop that loops through every row and collumn of game cells
-                //and displays a grid
                 <td>
 
                     @if (Model.Cells[x, y].Visited)
@@ -49,134 +49,6 @@
 
                                                 @Model.Cells[x, y].LiveNeighbors
                                             @:</font>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                                         }
                                     }
 
@@ -195,7 +67,6 @@
                                         <input type="image" name="submit" src="~/images/blockGrey.png" style="width:31px; height:32px; display:block;" border="0" alt="Submit" />
                                     }
                                 }
-
     </td>
 }
 
@@ -204,6 +75,7 @@
 
 
 </table>
+        </div></div>
 Clicks: @Model.Clicks
 <br />
 <p>Last move made on @DateTime.Now</p>

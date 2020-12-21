@@ -117,7 +117,7 @@ namespace MilestoneCST247.Services.Business
 
             }
 
-
+            
             gameDAO.updateGrid(g);
 
         }

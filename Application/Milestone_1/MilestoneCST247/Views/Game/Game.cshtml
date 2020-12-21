@@ -5,40 +5,47 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Game</h2>
-<p>Game Loaded on @DateTime.Now</p>
-
-<style>
-    .gameBoard table {
-        border: 1px solid;
-        border-color: black;
-        border-collapse: collapse;
-        border: 0;
-    }
-
-    .gameBoard td {
-        border-color: black;
-        border: 1px solid;
-        background-color: #BCBCBC;
-        width: 32px;
-        height: 33px;
-        text-align: center;
-        font-weight: bold;
-        vertical-align: middle;
-        padding: 0;
-    }
-</style>
+<div class="text-center justify-content-center">
 
 
-<div class="gameBoard">
+    <h2>Game</h2>
+    <p>Game Loaded on @DateTime.Now</p>
+
+    <style>
+        .gameBoard table {
+            border: 1px solid;
+            border-color: black;
+            border-collapse: collapse;
+            border: 0;
+        }
+
+        .gameBoard td {
+            border-color: black;
+            border: 1px solid;
+            background-color: #BCBCBC;
+            width: 32px;
+            height: 33px;
+            text-align: center;
+            font-weight: bold;
+            vertical-align: middle;
+            padding: 0;
+        }
+    </style>
+
+    <div class="justify-content-center">
+
+    
+        <div class="gameBoard">
 
 
-    <div id="gamePartial">
+            <div id="gamePartial">
 
-        <!-- Game board partial view which is updated via AJAX -->
+                <!-- Game board partial view which is updated via AJAX -->
 
-        @{ Html.RenderPartial("GameBoard", Model); }
+                @{ Html.RenderPartial("GameBoard", Model); }
 
+            </div>
+        </div>
     </div>
 
 </div>

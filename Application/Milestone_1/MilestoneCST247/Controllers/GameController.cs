@@ -1,5 +1,6 @@
 ﻿using MilestoneCST247.Models;
 using MilestoneCST247.Services.Business;
+using MilestoneCST247.Services.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,12 +11,18 @@ namespace MilestoneCST247.Controllers
 {
     public class GameController : Controller
     {
+        private readonly ILogger logger;
+
+        public GameController(ILogger logger)
+        {
+            this.logger = logger;
+        }
         // GET: Game
         [CustomAuthorization]
         public ActionResult Index()
         {
             UserService userService = new UserService();
-
+            logger.Info("Entered into the GameController");
             //check if user is logged in
             if (userService.loggedIn(this))
             {
@@ -30,12 +37,6 @@ namespace MilestoneCST247.Controllers
                 //check if user has an existing grid saved in db
                 if (g != null)
                 {
-                    // still need to do this section
-
-                    //if (g.GameOver)
-                    //{
-                    //    regenerate new grid
-                    //}
 
                 }
                 else
@@ -46,6 +47,7 @@ namespace MilestoneCST247.Controllers
 
 
                 //return game board view with newly generated or loaded grid for user
+                logger.Info("GameController returned the Game view Successful");
                 return View("Game", g);
 
             }
@@ -54,7 +56,7 @@ namespace MilestoneCST247.Controllers
             {
                 //Error no user is currently logged in
                 Error e = new Error("Cant access page! You are not Logged in! Please Log in!.");
-
+                logger.Info("There was an failed attempt to enter the GameController");
                 return View("Error", e);
             }
         }
@@ -78,10 +80,7 @@ namespace MilestoneCST247.Controllers
                 g.Clicks++;
                 //activate cell that was passed in from game view
                 gameService.activateCell(g, int.Parse(x), int.Parse(y));
-
-                //return same view with updated cell
-                // return Index();
-
+                logger.Info("activateCell() method fired successful");
                 // AJAX Partial view update
                 return PartialView("GameBoard", g);
             }
@@ -89,7 +88,7 @@ namespace MilestoneCST247.Controllers
             {
                 //user not logged in
                 Error e = new Error("Cant access page! You are not Logged in! Please Log in!.");
-
+                logger.Info("There was a failed attempt during activateCell()");
                 return View("Error", e);
             }
         }
@@ -103,7 +102,7 @@ namespace MilestoneCST247.Controllers
             GameService gameService = new GameService();
             User user = (User)Session["user"];
             gameService.removeGrid(user);
-
+            logger.Info("Game has been reset from the GameController");
             //returns view
             return Index();
 
@@ -128,7 +127,7 @@ namespace MilestoneCST247.Controllers
 
                 //call service function to publish stats
                 gameService.publishGrid(g);
-
+                logger.Info("Game has been published with publishGrid()");
                 //return same view
                 return Index();
 
@@ -138,7 +137,7 @@ namespace MilestoneCST247.Controllers
             {
                 //user not logged in
                 Error e = new Error("You must be logged in to access this page.");
-
+                logger.Info("There was and error submitting the highscore with publishGrid()");
                 return View("Error", e);
             }
         }
